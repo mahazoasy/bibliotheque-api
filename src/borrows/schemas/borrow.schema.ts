@@ -15,7 +15,7 @@ export class Borrow {
   @Prop({ default: Date.now })
   borrowed_at: Date;
 
-  @Prop({ default: null })
+  @Prop({ type: Date, default: null })  
   returned_at: Date | null;
 }
 

@@ -17,18 +17,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse = exception.getResponse();
 
     let message = exception.message;
-    let errors = null;
+    let errors: any = null;
 
     // gestion speciale pour les erreurs de validation (class-validator)
     if (exception instanceof BadRequestException && typeof exceptionResponse === 'object') {
-      const validationErrors = (exceptionResponse as any).message;
+    const validationErrors = (exceptionResponse as any).message;
       if (Array.isArray(validationErrors)) {
         message = 'Validation échouée';
         errors = this.formatValidationErrors(validationErrors);
       } else {
         message = validationErrors || message;
       }
-    } else if (typeof exceptionResponse === 'object' && (exceptionResponse as any).message) {
+      } else if (typeof exceptionResponse === 'object' && (exceptionResponse as any).message) {
       message = (exceptionResponse as any).message;
     }
 
