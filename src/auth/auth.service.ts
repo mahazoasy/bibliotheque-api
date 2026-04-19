@@ -2,10 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-// Pour simplifier, on utilise un utilisateur fictif (pas de table User dans le sujet)
 const FAKE_USER = {
   username: 'admin',
-  password: 'password123', // en vrai il faudrait hasher
+  password: 'password30213', 
 };
 
 @Injectable()
