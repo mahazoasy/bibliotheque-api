@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 
 const FAKE_USER = {
   username: 'admin',
-  password: 'password30213', 
+  password: 'password123', 
 };
 
 @Injectable()
