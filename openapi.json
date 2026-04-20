@@ -442,12 +442,7 @@
     "contact": {}
   },
   "tags": [],
-  "servers": [
-    {
-      "url": "http://localhost:3000/api/v1",
-      "description": "Développement"
-    }
-  ],
+  "servers": [],
   "components": {
     "securitySchemes": {
       "bearer": {
@@ -459,7 +454,22 @@
     "schemas": {
       "LoginDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin",
+            "description": "Nom d'utilisateur"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "Mot de passe"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
       },
       "CreateAuthorDto": {
         "type": "object",
