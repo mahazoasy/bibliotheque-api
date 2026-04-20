@@ -1,0 +1,562 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login réussi"
+          },
+          "401": {
+            "description": "Identifiants incorrects"
+          }
+        },
+        "summary": "Authentification et obtention du token JWT",
+        "tags": [
+          "Authentification"
+        ]
+      }
+    },
+    "/api/v1/authors": {
+      "get": {
+        "operationId": "AuthorsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Liste obtenue"
+          }
+        },
+        "summary": "Liste tous les auteurs",
+        "tags": [
+          "Authors"
+        ]
+      },
+      "post": {
+        "operationId": "AuthorsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auteur créé"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "422": {
+            "description": "Validation échouée"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Créer un auteur",
+        "tags": [
+          "Authors"
+        ]
+      }
+    },
+    "/api/v1/authors/{id}": {
+      "get": {
+        "operationId": "AuthorsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails obtenus"
+          },
+          "404": {
+            "description": "Auteur non trouvé"
+          }
+        },
+        "summary": "Détails d'un auteur + ses livres",
+        "tags": [
+          "Authors"
+        ]
+      },
+      "put": {
+        "operationId": "AuthorsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAuthorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Auteur modifié"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "404": {
+            "description": "Auteur non trouvé"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Modifier un auteur",
+        "tags": [
+          "Authors"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthorsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Auteur supprimé"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "404": {
+            "description": "Auteur non trouvé"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Supprimer un auteur",
+        "tags": [
+          "Authors"
+        ]
+      }
+    },
+    "/api/v1/books": {
+      "get": {
+        "operationId": "BooksController_findAll",
+        "parameters": [
+          {
+            "name": "available",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste obtenue"
+          }
+        },
+        "summary": "Liste des livres (filtre par disponibilité)",
+        "tags": [
+          "Books"
+        ]
+      },
+      "post": {
+        "operationId": "BooksController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Livre créé"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "422": {
+            "description": "Validation échouée"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ajouter un livre",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
+    "/api/v1/books/{id}": {
+      "get": {
+        "operationId": "BooksController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails obtenus"
+          },
+          "404": {
+            "description": "Livre non trouvé"
+          }
+        },
+        "summary": "Détails d'un livre + auteur",
+        "tags": [
+          "Books"
+        ]
+      },
+      "put": {
+        "operationId": "BooksController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Livre modifié"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "404": {
+            "description": "Livre non trouvé"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Modifier un livre",
+        "tags": [
+          "Books"
+        ]
+      },
+      "delete": {
+        "operationId": "BooksController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Livre supprimé"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "404": {
+            "description": "Livre non trouvé"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Supprimer un livre",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
+    "/api/v1/borrows": {
+      "get": {
+        "operationId": "BorrowsController_findAllActive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Liste obtenue"
+          },
+          "401": {
+            "description": "Non authentifié"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Liste tous les emprunts en cours",
+        "tags": [
+          "Borrows"
+        ]
+      },
+      "post": {
+        "operationId": "BorrowsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBorrowDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Emprunt créé"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "422": {
+            "description": "Validation échouée"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Enregistrer un emprunt",
+        "tags": [
+          "Borrows"
+        ]
+      }
+    },
+    "/api/v1/borrows/{id}/return": {
+      "patch": {
+        "operationId": "BorrowsController_returnBook",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retour effectué"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "404": {
+            "description": "Emprunt non trouvé"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Marquer un livre comme rendu",
+        "tags": [
+          "Borrows"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Bibliothèque",
+    "description": "API REST de gestion de bibliothèque — Cours 2026",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Développement"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateAuthorDto": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "first_name",
+          "last_name"
+        ]
+      },
+      "UpdateAuthorDto": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBookDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "isbn": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "available": {
+            "type": "boolean",
+            "default": true
+          },
+          "author_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "isbn",
+          "year",
+          "available",
+          "author_id"
+        ]
+      },
+      "UpdateBookDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "isbn": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "available": {
+            "type": "boolean",
+            "default": true
+          },
+          "author_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBorrowDto": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string"
+          },
+          "book_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_name",
+          "book_id"
+        ]
+      }
+    }
+  }
+}
