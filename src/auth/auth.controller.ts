@@ -1,13 +1,15 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
 class LoginDto {
+  @ApiProperty({ example: 'admin', description: "Nom d'utilisateur" })
   @IsString()
   @IsNotEmpty()
   username: string;
 
+  @ApiProperty({ example: 'password123', description: 'Mot de passe' })
   @IsString()
   @IsNotEmpty()
   password: string;
