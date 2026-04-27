@@ -1,27 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe';
+
+// Import avec require pour éviter les conflits de types
+const Stripe = require('stripe');
 
 @Injectable()
 export class StripeService {
-  private stripe: Stripe;
+  private stripe: any;
 
   constructor(private config: ConfigService) {
     const secretKey = this.config.getOrThrow<string>('STRIPE_SECRET_KEY');
-    this.stripe = new Stripe(secretKey, {
-      apiVersion: '2025-03-31.basil', // version stable récente
-    });
+    this.stripe = new Stripe(secretKey);
   }
 
-  async createPaymentIntent(userId: string, amount = 500, currency = 'eur'): Promise<Stripe.PaymentIntent> {
-    return this.stripe.paymentIntents.create({
-      amount,
-      currency,
-      metadata: { user_id: userId, plan: 'premium' },
-    });
+  async createPaymentIntent(userId: string, amount = 500, currency = 'eur'): Promise<any> {
+    try {
+      return await this.stripe.paymentIntents.create({
+        amount,
+        currency,
+        metadata: { user_id: userId, plan: 'premium' },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Erreur Stripe : ' + error.message);
+    }
   }
 
-  constructWebhookEvent(payload: Buffer, signature: string, webhookSecret: string): Stripe.Event {
-    return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+  constructWebhookEvent(payload: Buffer, signature: string, webhookSecret: string): any {
+    try {
+      return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    } catch (error) {
+      throw new InternalServerErrorException('Signature webhook invalide');
+    }
   }
 }
