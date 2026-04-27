@@ -5,6 +5,9 @@ import { AuthModule } from './auth/auth.module';
 import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
 import { BorrowsModule } from './borrows/borrows.module';
+import { UsersModule } from './users/users.module';
+import { OpenaiModule } from './openai/openai.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { BorrowsModule } from './borrows/borrows.module';
     AuthorsModule,
     BooksModule,
     BorrowsModule,
+    UsersModule,
+    OpenaiModule,
+    StripeModule,
   ],
 })
 export class AppModule {}

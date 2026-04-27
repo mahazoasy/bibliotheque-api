@@ -8,6 +8,9 @@ export type BorrowDocument = Borrow & Document;
 export class Borrow {
   @Prop({ required: true })
   user_name: string;
+  
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  user_id: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Book', required: true })
   book_id: Types.ObjectId;
@@ -17,6 +20,10 @@ export class Borrow {
 
   @Prop({ type: Date, default: null })  
   returned_at: Date | null;
+
+  @Prop({ type: String, enum: ['pending', 'paid', 'free'], default: 'free' })
+  payment_status: string;
+
 }
 
 export const BorrowSchema = SchemaFactory.createForClass(Borrow);

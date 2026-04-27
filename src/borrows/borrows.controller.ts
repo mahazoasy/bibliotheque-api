@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { BorrowsService } from './borrows.service';
 import { CreateBorrowDto } from './dto/create-borrow.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -25,8 +25,9 @@ export class BorrowsController {
   @ApiResponse({ status: 201, description: 'Emprunt créé' })
   @ApiResponse({ status: 401, description: 'Non authentifié' })
   @ApiResponse({ status: 422, description: 'Validation échouée' })
-  async create(@Body() createBorrowDto: CreateBorrowDto) {
-    const data = await this.borrowsService.create(createBorrowDto);
+  async create(@Body() createBorrowDto: CreateBorrowDto, @Req() req) {
+    const userId = req.user.userId; // Récupéré depuis le JWT
+    const data = await this.borrowsService.create(createBorrowDto, userId);
     return { success: true, data, message: 'Emprunt enregistré' };
   }
 

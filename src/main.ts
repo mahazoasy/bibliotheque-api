@@ -6,7 +6,10 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 // import * as fs from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // Option rawBody: true est nécessaire pour Stripe Webhook
+  const app = await NestFactory.create(AppModule, { rawBody: true });
+  
+  // Application des filtres et pipes
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
@@ -18,12 +21,22 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
+    
   const document = SwaggerModule.createDocument(app, config);
+  
+  // Enrichissement manuel des schémas Swagger pour les nouveaux endpoints
+  document.components = {
+    ...document.components,
+    schemas: {
+      ...document.components?.schemas,
+      SummaryResponse: { /* ... */ },
+      PaymentIntentResponse: { /* ... */ },
+    },
+  };
+  
   SwaggerModule.setup('api/documentation', app, document);
 
   await app.listen(3000);
-  // cette chose est utiliser pour generer le openapi.json et je déjà le generer alors je le commenter 
   // fs.writeFileSync('./openapi.json', JSON.stringify(document, null, 2));
-  // console.log('Fichier openapi.json généré');
 }
 bootstrap();

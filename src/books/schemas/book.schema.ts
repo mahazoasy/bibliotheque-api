@@ -20,6 +20,9 @@ export class Book {
 
   @Prop({ type: Types.ObjectId, ref: 'Author', required: true })
   author_id: Types.ObjectId;
+
+  @Prop({ type: String, default: null })
+  summary: string | null;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
