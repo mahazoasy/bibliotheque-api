@@ -14,10 +14,12 @@ export class UsersService {
   }
 
   async updateSubscriptionStatus(userId: string, status: string): Promise<User> {
-    return this.userModel.findByIdAndUpdate(
+    const updated = await this.userModel.findByIdAndUpdate(
       userId,
       { subscription_status: status },
       { returnDocument: 'after' },
     ).exec();
+    if (!updated) throw new NotFoundException('Utilisateur non trouvé');
+    return updated;
   }
 }

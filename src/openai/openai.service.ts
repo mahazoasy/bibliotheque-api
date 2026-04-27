@@ -9,26 +9,20 @@ export class OpenaiService {
   private readonly model: string;
 
   constructor(private config: ConfigService) {
-    this.apiKey = this.config.get('OPENAI_API_KEY');
-    this.baseUrl = this.config.get('OPENAI_BASE_URL');
-    this.model = this.config.get('OPENAI_MODEL');
-    if (!this.apiKey || !this.baseUrl) {
-      throw new Error('OpenAI configuration missing');
-    }
+    this.apiKey = this.config.getOrThrow<string>('OPENAI_API_KEY');
+    this.baseUrl = this.config.getOrThrow<string>('OPENAI_BASE_URL');
+    this.model = this.config.getOrThrow<string>('OPENAI_MODEL');
   }
 
   async generateBookSummary(title: string, authorName: string, year: number): Promise<string> {
-    const systemPrompt = `Tu es un expert en littérature. Tu génères des résumés concis et accrocheurs pour des fiches de bibliothèque. Réponds toujours en français. Maximum 3 phrases.`;
-    const userPrompt = `Génère un résumé pour le livre intitulé "${title}" écrit par ${authorName}, publié en ${year}.`;
-
     try {
       const response = await axios.post(
         `${this.baseUrl}/chat/completions`,
         {
           model: this.model,
           messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt },
+            { role: 'system', content: 'Tu es un expert en littérature. Génère un résumé concis et accrocheur en français, maximum 3 phrases.' },
+            { role: 'user', content: `Génère un résumé pour le livre "${title}" écrit par ${authorName}, publié en ${year}.` },
           ],
           temperature: 0.7,
           max_tokens: 150,
@@ -48,31 +42,27 @@ export class OpenaiService {
   }
 
   async extractKeywords(query: string): Promise<string[]> {
-    const systemPrompt = `Extrais les mots-clés importants de la requête de l'utilisateur. Retourne uniquement un tableau JSON de mots-clés. Exemple : ["mot1", "mot2"].`;
     try {
       const response = await axios.post(
         `${this.baseUrl}/chat/completions`,
         {
           model: this.model,
           messages: [
-            { role: 'system', content: systemPrompt },
+            { role: 'system', content: 'Extrais les mots-clés importants de la requête. Retourne uniquement un tableau JSON. Exemple : ["mot1","mot2"]' },
             { role: 'user', content: query },
           ],
           temperature: 0.3,
           max_tokens: 50,
         },
         {
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Authorization': `Bearer ${this.apiKey}` },
         },
       );
       let keywords = JSON.parse(response.data.choices[0].message.content);
       if (!Array.isArray(keywords)) keywords = [];
       return keywords;
     } catch (error) {
-      console.error('OpenAI keyword extraction error:', error);
+      console.error('OpenAI keyword error:', error);
       return [];
     }
   }
