@@ -342,6 +342,72 @@
         ]
       }
     },
+    "/api/v1/books/{id}/summary": {
+      "post": {
+        "operationId": "BooksController_generateSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Génère et sauvegarde un résumé via OpenAI",
+        "tags": [
+          "Books"
+        ]
+      },
+      "get": {
+        "operationId": "BooksController_getSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Retourne le résumé existant du livre",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
+    "/api/v1/books/smart-search": {
+      "post": {
+        "operationId": "BooksController_smartSearch",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Recherche par description naturelle via OpenAI",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
     "/api/v1/borrows": {
       "get": {
         "operationId": "BorrowsController_findAllActive",
@@ -431,6 +497,69 @@
         "summary": "Marquer un livre comme rendu",
         "tags": [
           "Borrows"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/payment-intent": {
+      "post": {
+        "operationId": "SubscriptionsController_createPaymentIntent",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Créer un PaymentIntent Stripe",
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/status": {
+      "get": {
+        "operationId": "SubscriptionsController_getSubscriptionStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtenir le statut d’abonnement",
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/v1/webhooks/stripe": {
+      "post": {
+        "operationId": "WebhooksController_handleStripeWebhook",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Webhooks"
         ]
       }
     }
@@ -566,6 +695,63 @@
           "user_name",
           "book_id"
         ]
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "book_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "generated_by": {
+                "type": "string"
+              },
+              "generated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentIntentResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "client_secret": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "publishable_key": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }
     }
   }

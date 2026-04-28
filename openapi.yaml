@@ -1,0 +1,462 @@
+openapi: 3.0.0
+paths:
+  /api/v1/auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: Login réussi
+        "401":
+          description: Identifiants incorrects
+      summary: Authentification et obtention du token JWT
+      tags:
+        - Authentification
+  /api/v1/authors:
+    get:
+      operationId: AuthorsController_findAll
+      parameters: []
+      responses:
+        "200":
+          description: Liste obtenue
+      summary: Liste tous les auteurs
+      tags: &a1
+        - Authors
+    post:
+      operationId: AuthorsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAuthorDto"
+      responses:
+        "201":
+          description: Auteur créé
+        "401":
+          description: Non authentifié
+        "422":
+          description: Validation échouée
+      security:
+        - bearer: []
+      summary: Créer un auteur
+      tags: *a1
+  /api/v1/authors/{id}:
+    get:
+      operationId: AuthorsController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Détails obtenus
+        "404":
+          description: Auteur non trouvé
+      summary: Détails d'un auteur + ses livres
+      tags: *a1
+    put:
+      operationId: AuthorsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAuthorDto"
+      responses:
+        "200":
+          description: Auteur modifié
+        "401":
+          description: Non authentifié
+        "404":
+          description: Auteur non trouvé
+      security:
+        - bearer: []
+      summary: Modifier un auteur
+      tags: *a1
+    delete:
+      operationId: AuthorsController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Auteur supprimé
+        "401":
+          description: Non authentifié
+        "404":
+          description: Auteur non trouvé
+      security:
+        - bearer: []
+      summary: Supprimer un auteur
+      tags: *a1
+  /api/v1/books:
+    get:
+      operationId: BooksController_findAll
+      parameters:
+        - name: available
+          required: false
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Liste obtenue
+      summary: Liste des livres (filtre par disponibilité)
+      tags: &a2
+        - Books
+    post:
+      operationId: BooksController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookDto"
+      responses:
+        "201":
+          description: Livre créé
+        "401":
+          description: Non authentifié
+        "422":
+          description: Validation échouée
+      security:
+        - bearer: []
+      summary: Ajouter un livre
+      tags: *a2
+  /api/v1/books/{id}:
+    get:
+      operationId: BooksController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Détails obtenus
+        "404":
+          description: Livre non trouvé
+      summary: Détails d'un livre + auteur
+      tags: *a2
+    put:
+      operationId: BooksController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookDto"
+      responses:
+        "200":
+          description: Livre modifié
+        "401":
+          description: Non authentifié
+        "404":
+          description: Livre non trouvé
+      security:
+        - bearer: []
+      summary: Modifier un livre
+      tags: *a2
+    delete:
+      operationId: BooksController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Livre supprimé
+        "401":
+          description: Non authentifié
+        "404":
+          description: Livre non trouvé
+      security:
+        - bearer: []
+      summary: Supprimer un livre
+      tags: *a2
+  /api/v1/books/{id}/summary:
+    post:
+      operationId: BooksController_generateSummary
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "201":
+          description: ""
+      security:
+        - bearer: []
+      summary: Génère et sauvegarde un résumé via OpenAI
+      tags: *a2
+    get:
+      operationId: BooksController_getSummary
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      summary: Retourne le résumé existant du livre
+      tags: *a2
+  /api/v1/books/smart-search:
+    post:
+      operationId: BooksController_smartSearch
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      summary: Recherche par description naturelle via OpenAI
+      tags: *a2
+  /api/v1/borrows:
+    get:
+      operationId: BorrowsController_findAllActive
+      parameters: []
+      responses:
+        "200":
+          description: Liste obtenue
+        "401":
+          description: Non authentifié
+      security: &a3
+        - bearer: []
+      summary: Liste tous les emprunts en cours
+      tags: &a4
+        - Borrows
+    post:
+      operationId: BorrowsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBorrowDto"
+      responses:
+        "201":
+          description: Emprunt créé
+        "401":
+          description: Non authentifié
+        "422":
+          description: Validation échouée
+      security: *a3
+      summary: Enregistrer un emprunt
+      tags: *a4
+  /api/v1/borrows/{id}/return:
+    patch:
+      operationId: BorrowsController_returnBook
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Retour effectué
+        "401":
+          description: Non authentifié
+        "404":
+          description: Emprunt non trouvé
+      security: *a3
+      summary: Marquer un livre comme rendu
+      tags: *a4
+  /api/v1/subscriptions/payment-intent:
+    post:
+      operationId: SubscriptionsController_createPaymentIntent
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      security:
+        - bearer: []
+      summary: Créer un PaymentIntent Stripe
+      tags: &a5
+        - Subscriptions
+  /api/v1/subscriptions/status:
+    get:
+      operationId: SubscriptionsController_getSubscriptionStatus
+      parameters: []
+      responses:
+        "200":
+          description: ""
+      security:
+        - bearer: []
+      summary: Obtenir le statut d’abonnement
+      tags: *a5
+  /api/v1/webhooks/stripe:
+    post:
+      operationId: WebhooksController_handleStripeWebhook
+      parameters:
+        - name: stripe-signature
+          required: true
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+      tags:
+        - Webhooks
+info:
+  title: API Bibliothèque
+  description: API REST de gestion de bibliothèque — Cours 2026
+  version: "1.0"
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    LoginDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: admin
+          description: Nom d'utilisateur
+        password:
+          type: string
+          example: password123
+          description: Mot de passe
+      required:
+        - username
+        - password
+    CreateAuthorDto:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        nationality:
+          type: string
+      required:
+        - first_name
+        - last_name
+    UpdateAuthorDto:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        nationality:
+          type: string
+    CreateBookDto:
+      type: object
+      properties:
+        title:
+          type: string
+        isbn:
+          type: string
+        year:
+          type: number
+        available:
+          type: boolean
+          default: true
+        author_id:
+          type: string
+      required:
+        - title
+        - isbn
+        - year
+        - available
+        - author_id
+    UpdateBookDto:
+      type: object
+      properties:
+        title:
+          type: string
+        isbn:
+          type: string
+        year:
+          type: number
+        available:
+          type: boolean
+          default: true
+        author_id:
+          type: string
+    CreateBorrowDto:
+      type: object
+      properties:
+        user_name:
+          type: string
+        book_id:
+          type: string
+      required:
+        - user_name
+        - book_id
+    SummaryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            book_id:
+              type: string
+            title:
+              type: string
+            summary:
+              type: string
+            generated_by:
+              type: string
+            generated_at:
+              type: string
+              format: date-time
+        message:
+          type: string
+    PaymentIntentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            client_secret:
+              type: string
+            amount:
+              type: number
+            currency:
+              type: string
+            publishable_key:
+              type: string
