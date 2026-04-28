@@ -1,7 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-// Import avec require pour éviter les conflits de types
 const Stripe = require('stripe');
 
 @Injectable()
@@ -21,7 +20,8 @@ export class StripeService {
         metadata: { user_id: userId, plan: 'premium' },
       });
     } catch (error) {
-      throw new InternalServerErrorException('Erreur Stripe : ' + error.message);
+      console.error('Stripe createPaymentIntent error:', error);
+      throw new InternalServerErrorException('Erreur lors de la création du PaymentIntent');
     }
   }
 
