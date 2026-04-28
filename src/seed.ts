@@ -13,7 +13,7 @@ async function bootstrap() {
   const borrowsService = app.get(BorrowsService);
   const usersService = app.get(UsersService);
 
-  // 1. Créer un utilisateur admin (nécessaire pour les emprunts, car Borrow a user_id)
+  // 1. Créer un utilisateur admin (nécessaire pour les emprunts)
   let adminUser;
   try {
     adminUser = await usersService.findOneByUsername('admin');
@@ -45,51 +45,51 @@ async function bootstrap() {
   });
   console.log('Auteurs créés');
 
-  // 3. Créer 5 livres (avec author_id)
+  // 3. Créer 5 livres
   const book1 = await booksService.create({
     title: 'Volume',
     isbn: '978-0451525260',
     year: 1935,
-    author_id: author1._id.toString(),
+    author_id: (author1 as any)._id.toString(),
     available: true,
   });
   const book2 = await booksService.create({
     title: 'Izay ho feoko eo am-pialana aina',
     isbn: '978-0451524935',
     year: 1924,
-    author_id: author2._id.toString(),
+    author_id: (author2 as any)._id.toString(),
     available: true,
   });
   const book3 = await booksService.create({
     title: 'Orgueil et Préjugés',
     isbn: '978-0141439518',
     year: 1813,
-    author_id: author3._id.toString(),
+    author_id: (author3 as any)._id.toString(),
     available: true,
   });
   const book4 = await booksService.create({
     title: 'Dinitra',
     isbn: '978-0451526342',
     year: 1973,
-    author_id: author2._id.toString(),
+    author_id: (author2 as any)._id.toString(),
     available: true,
   });
   const book5 = await booksService.create({
     title: 'Ando',
     isbn: '978-2070366477',
     year: 1969,
-    author_id: author1._id.toString(),
+    author_id: (author1 as any)._id.toString(),
     available: true,
   });
   console.log('Livres créés');
 
-  // 4. Créer 2 emprunts (avec user_id)
+  // 4. Créer 2 emprunts avec user_id
   await borrowsService.create(
-    { user_name: 'Judicaël', book_id: book1._id.toString() },
+    { user_name: 'Judicaël', book_id: (book1 as any)._id.toString() },
     adminUser._id.toString(),
   );
   await borrowsService.create(
-    { user_name: 'Mahazoasy', book_id: book2._id.toString() },
+    { user_name: 'Mahazoasy', book_id: (book2 as any)._id.toString() },
     adminUser._id.toString(),
   );
   console.log('Emprunts créés');
