@@ -23,6 +23,9 @@ export class Book {
 
   @Prop({ type: String, default: null })
   summary: string | null;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
