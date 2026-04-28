@@ -8,6 +8,8 @@ import { BorrowsModule } from './borrows/borrows.module';
 import { UsersModule } from './users/users.module';
 import { OpenaiModule } from './openai/openai.module';
 import { StripeModule } from './stripe/stripe.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { StripeModule } from './stripe/stripe.module';
     UsersModule,
     OpenaiModule,
     StripeModule,
+    SubscriptionsModule,
+    WebhooksModule,
   ],
 })
 export class AppModule {}

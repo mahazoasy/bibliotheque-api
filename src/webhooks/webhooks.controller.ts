@@ -24,8 +24,7 @@ export class WebhooksController {
     try {
       const event = this.stripeService.constructWebhookEvent(rawBody, signature, webhookSecret);
       if (event.type === 'payment_intent.succeeded') {
-        const metadata = event.data.object.metadata;
-        const userId = metadata.user_id;
+        const userId = event.data.object.metadata.user_id;
         if (userId) {
           await this.usersService.updateSubscriptionStatus(userId, 'premium');
         }
